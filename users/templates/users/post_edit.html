@@ -1,0 +1,27 @@
+{% load static %}
+{% if user.is_authenticated %}
+<html>
+    <head>
+        <title>The SOcial Network</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+    </head>
+    <body>
+        <div>
+            <h1><a href="/">The SOcial Network</a></h1>
+        </div>
+
+    <h2>New post</h2>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+{% else %}
+    <p>Please login or signup to see this page.</p>
+    <a href="{% url 'login' %}">login</a>  |
+    <a href="{% url 'signup' %}">signup</a>
+{% endif %}
+
+    </body>
+</html>
