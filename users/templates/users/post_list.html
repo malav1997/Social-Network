@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <html>
     <head>
         <title>The SOcial Network</title>
@@ -12,18 +13,30 @@
             
         </div>
     {% if user.is_authenticated %}
-        <h2><a href="/users/post/new">New Post</a></h2>
+        <h2><a href="/users/post/list">New Post</a></h2>
         {% for post in posts %}
             <div>
                 <h2><a href="">{{ post.title }}</a></h2>
                 <p>{{ post.text|linebreaksbr }}</p>
+                {{image.imgfile.url}}
+                {% if post.imgfile %}
+                    <img src="{{ post.imgfile.url }}" alt="{{ post.imgfile.url }}">
+                {% endif %}
                 <p>By:- {{ post.author }}</p>
                 <p>published: {{ post.published_date }}</p>
+                <form method="POST" class="post-form" action="/users/post/list">{% csrf_token %}
+                    {{ form }}
+                    {% for comment in post.comment_set.all %}
+                        <p><b>Comments: </b></p>
+                        <p><b>{{ comment.comment_auth }}: </b>{{ comment.ctext }}</p>
+                    {% endfor %}
+                    <button type="submit" class="save btn btn-default">Comment</button>
+                </form>
             </div>
         {% endfor %}
     {% else %}
          <p>Please login or signup to see this page.</p>
-         <a href="{% url 'login' %}">login</a>  |
+         <a href="{% url 'login' %}">login</a>  |`
          <a href="{% url 'signup' %}">signup</a>
     {% endif %}
 
