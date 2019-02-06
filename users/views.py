@@ -22,35 +22,33 @@ def post_new(request):
     return render(request, 'users/post_edit.html', {'form': form})
 
 def post_list(request):
+    
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-    # post = get_object_or_404(Post, title=title)
-    cform = CommentForm()
+    comment_form = CommentForm()
+
     comments = Comment.objects.all()
     if request.method == "POST":
-        comment_form = CommentForm(data=request.POST)
-         #if comment_form.is_valid():
-    #         new_comment = comment_form.save(commit=False)
-    #         new_comment.post = post
-    #         new_comment.save()
-
-            #cform = CommentForm(request.GET)
-            #data = {}
-            #Comment.ctext(**data)
-        if cform.is_valid():
-            comment={}
-            comment['ctext'] = request.POST['ctext']            
-            cform.changed_data['comment_auth'] = request.user
-        #cform['comment_auth'] = request.user
-        #cform['comment_auth_id_id'] = request.user
-
-        cform.save()
-            
-        return render(request, 'users/post_list.html', {'posts': posts, 'comments': comments, 'form': cform})
+        data = {
+            'ctext': request.POST['ctext'],
+            'comment_auth_id': request.user.id,
+            'title_id': request.POST['title_id']
+        }
+        comment_form = CommentForm(data=data)
+        if comment_form.is_valid():            
+            Comment.objects.create(**data)
+        return render(request, 'users/post_list.html', {
+            'posts': posts, 
+            'comments': comments, 
+            'form': comment_form
+            })
     else:
-        form = CommentForm()
 
-    return render(request, 'users/post_list.html', {'posts': posts, 'comments': comments, 'form': cform})
-	 
+        return render(request, 'users/post_list.html', {
+            'posts': posts, 
+            'comments': comments, 
+            'form': comment_form
+        })
+   
 
 class SignUp(generic.CreateView):
 	form_class = CustomUserCreationForm

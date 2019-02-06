@@ -26,11 +26,16 @@
                 <p>published: {{ post.published_date }}</p>
                 <form method="POST" class="post-form" action="/users/post/list">{% csrf_token %}
                     {{ form }}
+                    <button type="submit" class="save btn btn-default">Comment</button>
+                    <input style="display: none" type="text" name="title_id" value="{{post.id}}" />
+                    <input style="display: none" type="text" name="comment_auth_id" value="{{post.author.id}}" />
+                    <p><b>Comments: </b></p>
                     {% for comment in post.comment_set.all %}
-                        <p><b>Comments: </b></p>
+
+                        
                         <p><b>{{ comment.comment_auth }}: </b>{{ comment.ctext }}</p>
                     {% endfor %}
-                    <button type="submit" class="save btn btn-default">Comment</button>
+                   
                 </form>
             </div>
         {% endfor %}
