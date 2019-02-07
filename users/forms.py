@@ -27,4 +27,4 @@ class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment
 		fields = ('ctext', )
-		readonly = ('author', 'title', )
+		readonly = ('commment_auth', 'title')
